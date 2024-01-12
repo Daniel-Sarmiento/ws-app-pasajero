@@ -11,10 +11,19 @@
         #map {
             height: 500px;
         }
+
+        .desconectado {
+            color: red;
+        }
+
+        .conectado {
+            color: green;
+        }
     </style>
 </head>
 
 <body>
+    <p id="estatus" class="desconectado">Desconectado</p>
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
@@ -25,6 +34,7 @@
         let marker;
         let socket;
 
+        const estatusParrafo = document.getElementById("estatus");
         const markerIcon = L.icon({
             iconUrl: './mototaxi.ico', // Ruta a la imagen del marcador personalizado
             iconSize: [50, 50], // Tamaño del marcador [ancho, alto]
@@ -37,10 +47,14 @@
 
             socket.onopen = event => {
                 console.log("conectado al servidor");
+                estatusParrafo.innerText = "Conectado";
+                estatusParrafo.className = "conectado";
             }
 
             socket.onclose = event => {
                 console.log("desconectado del servidor");
+                estatusParrafo.innerText = "Desconectado";
+                estatusParrafo.className = "desconectado";
 
                 setTimeout(() => {
                     conectarServidorWS();
@@ -70,7 +84,7 @@
                 marker = L.marker([lat, lon], { icon: markerIcon }).addTo(map);
             }
         }
-        
+
         conectarServidorWS();
         cargarMapa(16.614911, -93.090843);
     </script>
